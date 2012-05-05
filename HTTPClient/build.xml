@@ -1,0 +1,47 @@
+<project name="HTTPClient" basedir="." default="compile">
+
+    <property environment="env"/>
+	<property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="dist.dir"    value="dist"/>
+	<property name="lib.dir"     value="lib"/>
+    <property name="manifest.file" value="${dist.dir}/MANIFEST.MF"/>
+
+ 	<property name="main.class" value="com.mobeelizer.http.client.test.Test"/>
+
+	<path id="external.jars">
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+	
+    <target name="compile">
+    	<mkdir dir="${classes.dir}"/>
+    	<mkdir dir="${dist.dir}"/>
+    	
+        <javac debug="on" 
+               fork="true"
+               destdir="${classes.dir}" 
+               srcdir="${src.dir}"
+        	   classpathref="external.jars">
+        </javac>
+    	
+    	<delete file="${dist.dir}/HttpClient.jar" />
+    	<delete file="${manifest.file}" />
+
+        <manifest file="${manifest.file}" >
+            <attribute name="built-by" value="${user.name}" />
+            <attribute name="Main-Class" value="${main.class}" />
+        </manifest>
+
+    	<jar destfile="${dist.dir}/HttpClient.jar"
+    		manifest="${manifest.file}">
+    	    <fileset dir="${classes.dir}"/>
+    		<fileset dir="${lib.dir}"/>
+    	</jar>
+    </target>
+
+	<target name="clean">
+        <delete dir="${dist.dir}"/>
+		<delete dir="${build.dir}"/>
+    </target>
+</project>
